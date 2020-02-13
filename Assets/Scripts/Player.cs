@@ -1,17 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UNAV2DTools.GameplaySystem;
 
-public class Player : MonoBehaviour
+public class Player : Character2D
 {
-
-    Vector2 Axis
-    {
-        get => new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-    }
-
     void Update()
     {
-        transform.Translate(Vector2.right * 5f * Time.deltaTime * Axis.x);
+
+        GameplaySystem.MovementTransform(transform, moveSpeed, spr, FlipSprite, anim);
+        
+        //jump
+        if(GameplaySystem.JumpButton && Grounding)
+        {
+            rb2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            anim.SetTrigger("jump");
+        }
+        anim.SetBool("ground", Grounding);
     }
 }
